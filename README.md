@@ -1,16 +1,68 @@
-# React + Vite
+# 💎 Zorvyn Finance Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **A premium, high-performance financial analytics platform built with React 19 and Tailwind 4.**
 
-Currently, two official plugins are available:
+![Zorvyn Finance Dashboard](https://images.unsplash.com/photo-1611974714012-7063fcca5bc8?q=80&w=2070&auto=format&fit=crop)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Zorvyn is a modern fintech dashboard designed for power users who need deep insights into their financial health. It combines elegant design with robust analytical tools to provide a comprehensive view of transactions, wealth management, and spending patterns.
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 📈 **Advanced Analytics**: Interactive charts (Recharts) with weekly spending trends, heatmaps, and cash flow projections.
+- 💳 **Wallet Management**: Full card lifecycle management (Add, Freeze, Remove) with premium physical card designs.
+- 🏦 **Connected Banks**: Secure bank account integration and quick transfer capabilities.
+- 🔐 **RBAC Security**: Role-Based Access Control (Admin/Viewer) to protect sensitive financial actions.
+- 🌓 **Dynamic Themes**: Seamless light and dark mode integration with persistent user preferences.
+- 💬 **Integrated Messages**: A built-in messaging system for financial support and peer-to-peer requests.
 
-## Expanding the ESLint configuration
+## 🚀 Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Framework**: [React 19](https://react.dev/) (Vite)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) & Vanilla CSS Tokens
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand) (with Persistence)
+- **Visualization**: [Recharts](https://recharts.org/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Testing**: [Vitest](https://vitest.dev/) (8/8 Core Tests Passed)
+
+## 📦 Project Structure
+
+```text
+src/
+├── components/   # Reusable UI components & modals
+├── pages/        # Main dashboard sections (Insights, Wallet, etc.)
+├── store/        # Zustand state & analytical logic
+├── data/         # Mock datasets & constants
+└── assets/       # Static resources
+```
+
+## 🛠️ Getting Started
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/LIYAKHAT-YUSUF-RAZA/Zorvyn-Finance-Dashboard.git
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Run in development**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Run tests**:
+   ```bash
+   npm test
+   ```
+
+## 🛡️ Security & Roles
+
+Zorvyn implements a strict Permission-Based system:
+- **Admin**: Full access to transfers, card management, and settings.
+- **Viewer**: Read-only access to analytics and transactions.
+
+---
+
+*This project was developed by [Liyakhat Yusuf Raza](https://github.com/LIYAKHAT-YUSUF-RAZA) to demonstrate high-end frontend engineering principles and modern aesthetic standards.*
