@@ -39,7 +39,7 @@ src/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/LIYAKHAT-YUSUF-RAZA/Zorvyn-Finance-Dashboard.git
+   git clone https://github.com/LIYAKHAT-YUSUF-RAZA/Zorvyn-Assessment.git
    ```
 
 2. **Install dependencies**:
