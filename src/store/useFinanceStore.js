@@ -981,7 +981,7 @@ const useFinanceStore = create(
       closeModal: () => set({ modalOpen: false, editingTransaction: null }),
     }),
     {
-      name: 'zorvyn-finance-storage',
+      name: 'zorvyn-finance-storage-v1',
       partialize: (state) => ({
         transactions: state.transactions,
         theme: state.theme,
