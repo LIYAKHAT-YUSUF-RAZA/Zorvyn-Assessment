@@ -18,7 +18,7 @@ const useFinanceStore = create(
           type: 'physical',
           cardNumber: '6549 7329 9821 2472',
           lastFour: '6549',
-          holder: 'Jaylon Baptista',
+          holder: 'Liyakhat Yusuf Raza',
           expiry: '12/28',
           cvv: '482',
           frozen: false,
@@ -35,7 +35,7 @@ const useFinanceStore = create(
           type: 'physical',
           cardNumber: '4821 5539 7012 9821',
           lastFour: '9821',
-          holder: 'Jaylon Baptista',
+          holder: 'Liyakhat Yusuf Raza',
           expiry: '08/27',
           cvv: '715',
           frozen: false,
@@ -890,8 +890,8 @@ const useFinanceStore = create(
 
       // --- Settings ---
       profile: {
-        name: 'Jane Doe',
-        email: 'jane.doe@example.com',
+        name: 'Liyakhat Yusuf Raza',
+        email: 'liyakhat.yusufr@example.com',
       },
       updateProfile: (profileUpdates) => set((state) => ({
         profile: { ...state.profile, ...profileUpdates }

@@ -14,7 +14,7 @@ export default function DashboardPage() {
         <div className="page-header-row">
           <div>
             <h1 className="page-greeting">
-              {greeting}, <span>Jaylon</span> 👋
+              {greeting}, <span>Liyakhat</span> 👋
             </h1>
             <p className="page-subtitle">This is your finance report</p>
           </div>

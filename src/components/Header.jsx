@@ -91,11 +91,11 @@ export default function Header() {
   };
 
   const getInitials = (name) => {
-    if (!name) return 'JB';
+    if (!name) return 'LYR';
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   };
 
-  const displayName = profile?.name || 'Jaylon Baptista';
+  const displayName = profile?.name || 'Liyakhat Yusuf Raza';
 
   // Derived Search Results
   const query = localSearch.toLowerCase().trim();

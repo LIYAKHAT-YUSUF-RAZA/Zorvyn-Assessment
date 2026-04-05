@@ -62,7 +62,7 @@ export default function CreateCardModal() {
       const newCard = addCard({
         brand: cardName.trim().toUpperCase(),
         type: 'virtual',
-        holder: 'Jaylon Baptista',
+        holder: 'Liyakhat Yusuf Raza',
         expiry: (() => {
           const d = new Date();
           d.setFullYear(d.getFullYear() + 3);
@@ -242,7 +242,7 @@ export default function CreateCardModal() {
               <div className="card-preview-bottom">
                 <div>
                   <div className="card-preview-label">Card Holder</div>
-                  <div className="card-preview-value">Jaylon Baptista</div>
+                  <div className="card-preview-value">Liyakhat Yusuf Raza</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div className="card-preview-label">Limit</div>
@@ -303,7 +303,7 @@ export default function CreateCardModal() {
               </div>
               <div className="review-row">
                 <span className="review-label">Card Holder</span>
-                <span className="review-value">Jaylon Baptista</span>
+                <span className="review-value">Liyakhat Yusuf Raza</span>
               </div>
               <div className="review-row">
                 <span className="review-label">Fee</span>
