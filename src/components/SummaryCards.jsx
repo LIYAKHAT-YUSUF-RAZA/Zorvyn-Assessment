@@ -106,21 +106,18 @@ export default function SummaryCards() {
   const incomeFmt = formatCurrency(currentMonth.income);
   const expenseFmt = formatCurrency(currentMonth.expenses);
 
-  const widgetExpenseValue = 
-    expenseTab === 'Daily' ? currentMonth.expenses / 30 :
-    expenseTab === 'Weekly' ? currentMonth.expenses / 4 :
-    currentMonth.expenses;
+  const widgetExpenseValue = getTotalExpenses(expenseTab);
   const widgetExpenseFmt = formatCurrency(widgetExpenseValue);
 
   // Sparkline data from monthly
   const incomeSparkline = monthlyData.map(m => m.income);
   const expenseSparkline = monthlyData.map(m => m.expenses);
 
-  // Top expense categories for the widget
-  const totalExpenses = currentMonth.expenses;
-  const topCategories = categoryBreakdown.slice(0, 4).map(cat => ({
+  // Top expense categories for the horizontal widget
+  const selectedBreakdown = getCategoryBreakdown(expenseTab);
+  const topCategories = selectedBreakdown.slice(0, 4).map(cat => ({
     ...cat,
-    pct: totalExpenses > 0 ? Math.round((cat.value / getTotalExpenses()) * 100) : 0,
+    pct: widgetExpenseValue > 0 ? Math.round((cat.value / widgetExpenseValue) * 100) : 0,
   }));
 
   const categoryColors = {
@@ -319,6 +316,7 @@ export default function SummaryCards() {
           <button className={`spending-widget-tab ${expenseTab === 'Daily' ? 'active' : ''}`} onClick={() => setExpenseTab('Daily')}>Daily</button>
           <button className={`spending-widget-tab ${expenseTab === 'Weekly' ? 'active' : ''}`} onClick={() => setExpenseTab('Weekly')}>Weekly</button>
           <button className={`spending-widget-tab ${expenseTab === 'Monthly' ? 'active' : ''}`} onClick={() => setExpenseTab('Monthly')}>Monthly</button>
+          <button className={`spending-widget-tab ${expenseTab === 'Yearly' ? 'active' : ''}`} onClick={() => setExpenseTab('Yearly')}>Yearly</button>
         </div>
         <div style={{ textAlign: 'center', marginBottom: 14 }}>
           <div style={{
@@ -330,7 +328,10 @@ export default function SummaryCards() {
             ${widgetExpenseFmt.whole}<span style={{ fontSize: '1.125rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>{widgetExpenseFmt.decimal}</span>
           </div>
           <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', marginTop: 2, fontWeight: 500 }}>
-            {expenseTab === 'Daily' ? "Today's average" : expenseTab === 'Weekly' ? "This week's total" : "This month's total"}
+            {expenseTab === 'Daily' ? "Today's total" : 
+             expenseTab === 'Weekly' ? "This week's total" : 
+             expenseTab === 'Monthly' ? "This month's total" : 
+             "This year's total"}
           </div>
         </div>
         {/* Real progress bars from data */}

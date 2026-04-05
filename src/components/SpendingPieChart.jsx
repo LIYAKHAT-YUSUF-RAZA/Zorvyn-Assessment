@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload }) => {
 const RADIAN = Math.PI / 180;
 
 export default function SpendingPieChart() {
-  const { getCategoryBreakdown, getTotalExpenses } = useFinanceStore();
+  const { getCategoryBreakdown, getTotalExpenses, openRetirementModal } = useFinanceStore();
   const categoryData = getCategoryBreakdown();
   const totalExpenses = getTotalExpenses();
 
@@ -111,7 +111,7 @@ export default function SpendingPieChart() {
       {/* Promo Banner */}
       <div className="promo-banner animate-in">
         <h3>Secure Your Future with Our Comprehensive Retirement Plans!</h3>
-        <button className="promo-btn">
+        <button className="promo-btn" onClick={openRetirementModal}>
           Learn more <ArrowRight size={14} />
         </button>
       </div>

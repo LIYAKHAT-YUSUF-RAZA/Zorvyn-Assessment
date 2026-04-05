@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Calendar, ArrowUpRight } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -16,12 +17,13 @@ const monthNames = {
   '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec',
 };
 
-const formatMonth = (month) => {
-  const parts = month.split('-');
-  return monthNames[parts[1]];
+const formatLabel = (label, period) => {
+  if (period === 'Weekly' || period === 'Monthly') return label;
+  const parts = label.split('-');
+  return monthNames[parts[1]] || label;
 };
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, period }) => {
   if (!active || !payload?.length) return null;
   return (
     <div style={{
@@ -38,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         color: 'var(--text-primary)',
         marginBottom: '10px',
       }}>
-        {formatMonth(label)}
+        {formatLabel(label, period)}
       </p>
       {payload.map((entry, index) => (
         <div key={index} style={{
@@ -78,11 +80,14 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function BalanceChart() {
-  const { getMonthlyData } = useFinanceStore();
-  const monthlyData = getMonthlyData();
+  const { getChartData } = useFinanceStore();
+  const [period, setPeriod] = useState('Yearly');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  const chartData = getChartData(period);
 
-  const avgIncome = Math.round(monthlyData.reduce((s, m) => s + m.income, 0) / (monthlyData.length || 1));
-  const avgExpenses = Math.round(monthlyData.reduce((s, m) => s + m.expenses, 0) / (monthlyData.length || 1));
+  const avgIncome = Math.round(chartData.reduce((s, m) => s + m.income, 0) / (chartData.length || 1));
+  const avgExpenses = Math.round(chartData.reduce((s, m) => s + m.expenses, 0) / (chartData.length || 1));
 
   return (
     <div className="card animate-in" id="statistics-chart" style={{ padding: '24px' }}>
@@ -100,15 +105,61 @@ export default function BalanceChart() {
             </div>
           </div>
         </div>
-        <button className="chart-toggle">
-          <Calendar size={14} />
-          Monthly
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button 
+            className="chart-toggle" 
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <Calendar size={14} />
+            {period}
+          </button>
+          
+          {isDropdownOpen && (
+            <div className="chart-dropdown" style={{
+              position: 'absolute',
+              top: '100%',
+              right: 0,
+              marginTop: '8px',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px',
+              boxShadow: 'var(--shadow-lg)',
+              zIndex: 100,
+              minWidth: '120px',
+              overflow: 'hidden'
+            }}>
+              {['Weekly', 'Monthly', 'Yearly'].map((p) => (
+                <button
+                  key={p}
+                  onClick={() => {
+                    setPeriod(p);
+                    setIsDropdownOpen(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '10px 16px',
+                    textAlign: 'left',
+                    background: period === p ? 'var(--bg-tertiary)' : 'transparent',
+                    border: 'none',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.875rem',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = 'var(--bg-tertiary)'}
+                  onMouseLeave={(e) => e.target.style.background = period === p ? 'var(--bg-tertiary)' : 'transparent'}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div style={{ width: '100%', height: 300, position: 'relative' }}>
         <ResponsiveContainer width="100%" height="100%" minHeight={300} debounce={50}>
-          <AreaChart data={monthlyData || []} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+          <AreaChart data={chartData || []} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>
               <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#10b981" stopOpacity={0.15} />
@@ -125,8 +176,8 @@ export default function BalanceChart() {
               vertical={false}
             />
             <XAxis
-              dataKey="month"
-              tickFormatter={formatMonth}
+              dataKey="label"
+              tickFormatter={(v) => formatLabel(v, period)}
               tick={{ fill: 'var(--text-tertiary)', fontSize: 12, fontWeight: 500 }}
               axisLine={false}
               tickLine={false}
@@ -139,7 +190,7 @@ export default function BalanceChart() {
               tickLine={false}
               dx={-5}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip period={period} />} />
             <Area
               type="monotone"
               dataKey="income"
@@ -180,7 +231,7 @@ export default function BalanceChart() {
             <span className="compare-badge up" style={{ fontSize: '0.6875rem' }}>
               <ArrowUpRight size={11} /> +9.8%
             </span>
-            <span className="compare-text">vs last month</span>
+            <span className="compare-text">vs last {period.toLowerCase()}</span>
           </div>
         </div>
         <div className="avg-stat-card" style={{
@@ -197,7 +248,7 @@ export default function BalanceChart() {
             <span className="compare-badge down" style={{ fontSize: '0.6875rem' }}>
               <ArrowUpRight size={11} /> +8.7%
             </span>
-            <span className="compare-text">vs last month</span>
+            <span className="compare-text">vs last {period.toLowerCase()}</span>
           </div>
         </div>
       </div>

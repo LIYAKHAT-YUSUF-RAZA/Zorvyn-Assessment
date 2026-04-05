@@ -8,6 +8,7 @@ import RequestMoneyModal from './components/RequestMoneyModal';
 import CardDetailModal from './components/CardDetailModal';
 import CreateCardModal from './components/CreateCardModal';
 import ConnectBankModal from './components/ConnectBankModal';
+import RetirementModal from './components/RetirementModal';
 import SkeletonLoader from './components/SkeletonLoader';
 import DashboardPage from './pages/DashboardPage';
 import TransactionsPage from './pages/TransactionsPage';
@@ -100,6 +101,7 @@ function App() {
       <CardDetailModal />
       <CreateCardModal />
       <ConnectBankModal />
+      <RetirementModal />
     </div>
   );
 }

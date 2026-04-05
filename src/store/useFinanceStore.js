@@ -153,6 +153,11 @@ const useFinanceStore = create(
       openConnectBankModal: () => set({ connectBankModalOpen: true }),
       closeConnectBankModal: () => set({ connectBankModalOpen: false }),
 
+      // --- Retirement Modal ---
+      retirementModalOpen: false,
+      openRetirementModal: () => set({ retirementModalOpen: true }),
+      closeRetirementModal: () => set({ retirementModalOpen: false }),
+
       // --- Transactions ---
       transactions: mockTransactions,
 
@@ -326,6 +331,28 @@ const useFinanceStore = create(
         return filtered;
       },
 
+      // Helper to get transactions by period
+      getTransactionsByPeriod: (period = 'Monthly') => {
+        const { transactions } = get();
+        // Since mock data ends at 2026-03-28, we use 2026-03-29 as 'now' for demo purposes
+        const now = new Date('2026-03-29');
+        const startDate = new Date(now);
+
+        if (period === 'Daily') {
+          startDate.setDate(now.getDate() - 1); // Last 24 hours
+        } else if (period === 'Weekly') {
+          startDate.setDate(now.getDate() - 7); // Last 7 days
+        } else if (period === 'Yearly') {
+          startDate.setFullYear(now.getFullYear() - 1); // Last 365 days
+        } else {
+          // Default to Monthly (last 30 days)
+          startDate.setMonth(now.getMonth() - 1);
+        }
+
+        const startStr = startDate.toISOString().split('T')[0];
+        return transactions.filter(t => t.date >= startStr);
+      },
+
       // Helper to get transactions within the last N months
       getTransactionsByMonths: (months) => {
         const { transactions } = get();
@@ -348,8 +375,8 @@ const useFinanceStore = create(
           .reduce((sum, txn) => sum + txn.amount, 0);
       },
 
-      getTotalExpenses: (months) => {
-        const txns = get().getTransactionsByMonths(months);
+      getTotalExpenses: (period) => {
+        const txns = get().getTransactionsByPeriod(period);
         return txns
           .filter((txn) => txn.type === TRANSACTION_TYPE.EXPENSE)
           .reduce((sum, txn) => sum + txn.amount, 0);
@@ -380,9 +407,66 @@ const useFinanceStore = create(
         return Object.values(monthlyMap).sort((a, b) => a.month.localeCompare(b.month));
       },
 
+      // --- Chart Data for Statistics ---
+      getChartData: (period = 'Yearly') => {
+        const { transactions } = get();
+        const now = new Date('2026-03-31');
+        const data = [];
+
+        if (period === 'Weekly') {
+          // Last 7 days
+          for (let i = 6; i >= 0; i--) {
+            const date = new Date(now);
+            date.setDate(now.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+            const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+            const dayTxns = transactions.filter(t => t.date === dateStr);
+            const income = dayTxns.filter(t => t.type === TRANSACTION_TYPE.INCOME).reduce((s, t) => s + t.amount, 0);
+            const expenses = dayTxns.filter(t => t.type === TRANSACTION_TYPE.EXPENSE).reduce((s, t) => s + t.amount, 0);
+
+            data.push({ label: dayName, income, expenses, date: dateStr });
+          }
+        } else if (period === 'Monthly') {
+          // Last 30 days, grouped by 5-day intervals or just daily
+          for (let i = 29; i >= 0; i--) {
+            const date = new Date(now);
+            date.setDate(now.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+            const dayLabel = `${date.getMonth() + 1}/${date.getDate()}`;
+
+            const dayTxns = transactions.filter(t => t.date === dateStr);
+            const income = dayTxns.filter(t => t.type === TRANSACTION_TYPE.INCOME).reduce((s, t) => s + t.amount, 0);
+            const expenses = dayTxns.filter(t => t.type === TRANSACTION_TYPE.EXPENSE).reduce((s, t) => s + t.amount, 0);
+
+            data.push({ label: dayLabel, income, expenses, date: dateStr });
+          }
+        } else {
+          // Yearly: Last 12 months (like getMonthlyData)
+          const monthlyMap = {};
+          transactions.forEach((txn) => {
+            const month = txn.date.substring(0, 7);
+            if (!monthlyMap[month]) monthlyMap[month] = { income: 0, expenses: 0 };
+            if (txn.type === TRANSACTION_TYPE.INCOME) monthlyMap[month].income += txn.amount;
+            else monthlyMap[month].expenses += txn.amount;
+          });
+
+          const sortedMonths = Object.keys(monthlyMap).sort().slice(-12);
+          sortedMonths.forEach(m => {
+            data.push({ 
+              label: m, // Will be formatted to Month name in component
+              income: monthlyMap[m].income, 
+              expenses: monthlyMap[m].expenses 
+            });
+          });
+        }
+
+        return data;
+      },
+
       // --- Category breakdown ---
-      getCategoryBreakdown: (months) => {
-        const txns = get().getTransactionsByMonths(months);
+      getCategoryBreakdown: (period) => {
+        const txns = get().getTransactionsByPeriod(period);
         const categoryMap = {};
 
         txns
